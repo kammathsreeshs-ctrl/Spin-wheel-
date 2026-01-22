@@ -3,38 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <title>Spin & Win</title>
+
 <style>
 body{
   font-family: Arial;
   text-align: center;
-  background: #f5f5f5;
+  background: #f4f4f4;
 }
-#wheel{
-  width:300px;
-  height:300px;
-  border-radius:50%;
-  border:8px solid #333;
-  margin:30px auto;
-  position:relative;
-  background:conic-gradient(
-    #ff7675 0deg 90deg,
-    #74b9ff 90deg 180deg,
-    #55efc4 180deg 270deg,
-    #ffeaa7 270deg 360deg
-  );
-}
+
 #pointer{
   width:0;
   height:0;
   border-left:15px solid transparent;
   border-right:15px solid transparent;
   border-bottom:30px solid red;
-  margin:0 auto;
+  margin:20px auto -10px;
 }
+
+#wheel{
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  border:8px solid #333;
+  margin:20px auto;
+  background: conic-gradient(
+    #ff7675 0deg 51deg,
+    #74b9ff 51deg 102deg,
+    #55efc4 102deg 153deg,
+    #ffeaa7 153deg 204deg,
+    #fab1a0 204deg 255deg,
+    #a29bfe 255deg 306deg,
+    #fdcb6e 306deg 360deg
+  );
+}
+
 button{
-  padding:10px 25px;
-  font-size:16px;
+  padding:12px 30px;
+  font-size:18px;
   cursor:pointer;
+}
+
+#result{
+  font-size:18px;
+  margin-top:15px;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -42,6 +54,7 @@ button{
 <body>
 
 <h2>🎉 Spin & Win 🎉</h2>
+
 <div id="pointer"></div>
 <div id="wheel"></div>
 
@@ -50,6 +63,17 @@ button{
 
 <script>
 let spinning = false;
+
+let prizes = [
+  "10%",
+  "30%",
+  "50%",
+  "Better luck next time",
+  "Better luck next time",
+  "Better luck next time",
+  "Gift voucher"
+];
+
 function spin(){
   if(spinning) return;
   spinning = true;
@@ -61,10 +85,9 @@ function spin(){
   wheel.style.transform = "rotate(" + deg + "deg)";
 
   setTimeout(()=>{
-    let prizes = ["10% OFF","Free Service","Try Again","20% OFF"];
-    let prize = prizes[Math.floor(Math.random()*prizes.length)];
+    let prize = prizes[Math.floor(Math.random() * prizes.length)];
     document.getElementById("result").innerText =
-      "🎁 You won: " + prize;
+      "🎁 Result: " + prize;
     spinning = false;
   },4000);
 }
