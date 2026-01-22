@@ -1,31 +1,56 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Spin & Win</title>
+<title>The Barber Company - Spin & Win</title>
 
 <style>
 body{
   font-family: Arial, sans-serif;
   text-align: center;
   background: #f2f2f2;
+  margin:0;
+  padding:20px;
 }
 
-canvas{
-  margin-top:20px;
+h1{
+  margin:10px 0 0;
+  font-size:28px;
+}
+
+h2{
+  margin:5px 0 20px;
+  font-size:18px;
+  color:#555;
+}
+
+#wrapper{
+  position: relative;
+  width: 380px;
+  margin: 0 auto;
 }
 
 #pointer{
+  position:absolute;
+  top:-5px;
+  left:50%;
+  transform:translateX(-50%);
   width:0;
   height:0;
-  border-left:15px solid transparent;
-  border-right:15px solid transparent;
-  border-bottom:30px solid red;
-  margin:20px auto -10px;
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-bottom:35px solid red;
+  z-index:10;
+}
+
+canvas{
+  display:block;
+  margin:0 auto;
 }
 
 button{
-  padding:12px 30px;
+  margin-top:25px;
+  padding:14px 35px;
   font-size:18px;
   cursor:pointer;
 }
@@ -33,40 +58,43 @@ button{
 #result{
   font-size:20px;
   font-weight:bold;
-  margin-top:15px;
+  margin-top:20px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🎉 Spin & Win 🎉</h2>
+<h1>The Barber Company</h1>
+<h2>Special Offer</h2>
 
-<div id="pointer"></div>
-<canvas id="wheel" width="320" height="320"></canvas>
+<div id="wrapper">
+  <div id="pointer"></div>
+  <canvas id="wheel" width="380" height="380"></canvas>
+</div>
 
-<br>
 <button onclick="spin()">SPIN</button>
 
 <p id="result"></p>
 
 <script>
+// 🔹 ORDERED EXACTLY AS REQUESTED
 const prizes = [
   "10%",
+  "Better luck next time",
   "30%",
+  "Better luck next time",
   "50%",
-  "Better luck next time",
-  "Better luck next time",
   "Better luck next time",
   "Gift voucher"
 ];
 
 const colors = [
   "#ff7675",
-  "#74b9ff",
-  "#55efc4",
   "#ffeaa7",
+  "#74b9ff",
   "#fab1a0",
+  "#55efc4",
   "#a29bfe",
   "#fdcb6e"
 ];
@@ -114,8 +142,8 @@ function spin(){
   spinning = true;
   document.getElementById("result").innerText = "";
 
-  let spinAngle = Math.random() * 360 + 1440; // 4+ rounds
-  let spinTime = 4000;
+  let spinAngle = Math.random() * 360 + 1800;
+  let spinTime = 4500;
   let start = null;
 
   function animate(timestamp){
@@ -133,7 +161,8 @@ function spin(){
     } else {
       spinning = false;
 
-      let finalAngle = (currentAngle + Math.PI/2) % (2 * Math.PI);
+      // Pointer is at TOP
+      let finalAngle = (currentAngle + Math.PI * 1.5) % (2 * Math.PI);
       let index = Math.floor(prizes.length - (finalAngle / slice)) % prizes.length;
 
       document.getElementById("result").innerText =
