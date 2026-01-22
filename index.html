@@ -114,4 +114,36 @@ function spin(){
   spinning = true;
   document.getElementById("result").innerText = "";
 
-  let spinAngle = Math.random() * 360 + 1440; //
+  let spinAngle = Math.random() * 360 + 1440; // 4+ rounds
+  let spinTime = 4000;
+  let start = null;
+
+  function animate(timestamp){
+    if(!start) start = timestamp;
+    let progress = timestamp - start;
+    let ease = progress / spinTime;
+    ease = 1 - Math.pow(1 - ease, 3);
+
+    currentAngle = (spinAngle * ease) * Math.PI / 180;
+    ctx.clearRect(0,0,size,size);
+    drawWheel();
+
+    if(progress < spinTime){
+      requestAnimationFrame(animate);
+    } else {
+      spinning = false;
+
+      let finalAngle = (currentAngle + Math.PI/2) % (2 * Math.PI);
+      let index = Math.floor(prizes.length - (finalAngle / slice)) % prizes.length;
+
+      document.getElementById("result").innerText =
+        "🎁 Result: " + prizes[index];
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+</script>
+
+</body>
+</html>
