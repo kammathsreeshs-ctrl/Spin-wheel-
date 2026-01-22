@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Spin & Win</title>
+</head>
+<body style="text-align:center;font-family:Arial">
+
+<h2>🎉 Spin & Win 🎉</h2>
+<button onclick="spin()">SPIN</button>
+<p id="result"></p>
+
+<script>
+let prizes = ["10% Off", "Free Service", "Try Again", "20% Off"];
+function spin(){
+  let prize = prizes[Math.floor(Math.random() * prizes.length)];
+  document.getElementById("result").innerText =
+    "You won: " + prize;
+}
+</script>
+
+</body>
+</html>
