@@ -3,19 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <title>Spin & Win</title>
+<style>
+body{
+  font-family: Arial;
+  text-align: center;
+  background: #f5f5f5;
+}
+#wheel{
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  border:8px solid #333;
+  margin:30px auto;
+  position:relative;
+  background:conic-gradient(
+    #ff7675 0deg 90deg,
+    #74b9ff 90deg 180deg,
+    #55efc4 180deg 270deg,
+    #ffeaa7 270deg 360deg
+  );
+}
+#pointer{
+  width:0;
+  height:0;
+  border-left:15px solid transparent;
+  border-right:15px solid transparent;
+  border-bottom:30px solid red;
+  margin:0 auto;
+}
+button{
+  padding:10px 25px;
+  font-size:16px;
+  cursor:pointer;
+}
+</style>
 </head>
-<body style="text-align:center;font-family:Arial">
+
+<body>
 
 <h2>🎉 Spin & Win 🎉</h2>
+<div id="pointer"></div>
+<div id="wheel"></div>
+
 <button onclick="spin()">SPIN</button>
 <p id="result"></p>
 
 <script>
-let prizes = ["10% Off", "Free Service", "Try Again", "20% Off"];
+let spinning = false;
 function spin(){
-  let prize = prizes[Math.floor(Math.random() * prizes.length)];
-  document.getElementById("result").innerText =
-    "You won: " + prize;
+  if(spinning) return;
+  spinning = true;
+
+  let wheel = document.getElementById("wheel");
+  let deg = Math.floor(3000 + Math.random() * 3000);
+
+  wheel.style.transition = "transform 4s ease-out";
+  wheel.style.transform = "rotate(" + deg + "deg)";
+
+  setTimeout(()=>{
+    let prizes = ["10% OFF","Free Service","Try Again","20% OFF"];
+    let prize = prizes[Math.floor(Math.random()*prizes.length)];
+    document.getElementById("result").innerText =
+      "🎁 You won: " + prize;
+    spinning = false;
+  },4000);
 }
 </script>
 
