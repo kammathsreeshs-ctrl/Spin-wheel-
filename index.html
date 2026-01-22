@@ -24,7 +24,6 @@ h1{
 h2{
   margin-top:0;
   font-size:20px;
-  color:#333;
 }
 
 #wrapper{
@@ -118,29 +117,33 @@ const slice = 2 * Math.PI / prizes.length;
 let angle = 0;
 let spinning = false;
 
+// Pointer is fixed at TOP (12 o'clock)
+const POINTER_ANGLE = -Math.PI / 2;
+
 function drawWheel(){
   ctx.clearRect(0,0,size,size);
-  for(let i=0;i<prizes.length;i++){
-    let start = angle + i * slice;
-    let end = start + slice;
+
+  for(let i = 0; i < prizes.length; i++){
+    const start = angle + i * slice;
+    const end = start + slice;
 
     ctx.beginPath();
-    ctx.moveTo(center,center);
-    ctx.arc(center,center,radius,start,end);
+    ctx.moveTo(center, center);
+    ctx.arc(center, center, radius, start, end);
     ctx.fillStyle = colors[i];
     ctx.fill();
     ctx.stroke();
 
     ctx.save();
     ctx.translate(
-      center + Math.cos(start + slice/2) * radius * 0.65,
-      center + Math.sin(start + slice/2) * radius * 0.65
+      center + Math.cos(start + slice / 2) * radius * 0.65,
+      center + Math.sin(start + slice / 2) * radius * 0.65
     );
-    ctx.rotate(start + slice/2);
-    ctx.fillStyle="#000";
-    ctx.font="16px Poppins";
-    ctx.textAlign="center";
-    ctx.fillText(prizes[i],0,0);
+    ctx.rotate(start + slice / 2);
+    ctx.fillStyle = "#000";
+    ctx.font = "16px Poppins";
+    ctx.textAlign = "center";
+    ctx.fillText(prizes[i], 0, 0);
     ctx.restore();
   }
 }
@@ -152,28 +155,36 @@ function spin(){
   spinning = true;
   document.getElementById("result").innerText = "";
 
-  let spinAngle = Math.random() * 360 + 2160;
-  let duration = 5000;
+  const spinAngle = Math.random() * Math.PI * 6 + Math.PI * 10;
+  const duration = 5000;
   let startTime = null;
 
   function animate(time){
     if(!startTime) startTime = time;
-    let progress = time - startTime;
-    let t = progress / duration;
-    t = 1 - Math.pow(1 - t, 3);
+    const progress = time - startTime;
+    const t = Math.min(progress / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
 
-    angle = (spinAngle * t) * Math.PI / 180;
+    angle = spinAngle * ease;
     drawWheel();
 
     if(progress < duration){
       requestAnimationFrame(animate);
     } else {
       spinning = false;
-      let finalAngle = (angle + Math.PI * 1.5) % (2 * Math.PI);
-      let index = Math.floor(prizes.length - finalAngle / slice) % prizes.length;
-      document.getElementById("result").innerText = "🎁 Result: " + prizes[index];
+
+      // 🔥 EXACT PRIZE UNDER POINTER
+      const normalized =
+        (POINTER_ANGLE - angle + 2 * Math.PI) % (2 * Math.PI);
+
+      const index =
+        Math.floor(normalized / slice) % prizes.length;
+
+      document.getElementById("result").innerText =
+        "🎁 Result: " + prizes[index];
     }
   }
+
   requestAnimationFrame(animate);
 }
 </script>
