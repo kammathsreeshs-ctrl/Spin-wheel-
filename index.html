@@ -169,6 +169,12 @@ function spin(){
   const totalSpin = Math.random() * Math.PI * 6 + Math.PI * 10;
   const duration = 5000;
   let startTime = null;
+  document.getElementById("g_name").value = name;
+document.getElementById("g_phone").value = phone;
+document.getElementById("g_prize").value = prize;
+
+document.getElementById("gForm").submit();
+
 
   function animate(time){
     if(!startTime) startTime = time;
@@ -209,6 +215,16 @@ function spin(){
   requestAnimationFrame(animate);
 }
 </script>
+<form id="gForm" method="POST" target="hidden_iframe"
+action="https://docs.google.com/forms/u/0/d/1q8IKx51_4RakIWo8rS0dOsgrO7TVq6b1BnyRu2omBCg/previewResponse">
+
+  <input type="hidden" name="entry.1050934749" id="g_name">
+  <input type="hidden" name="entry.1077858981" id="g_phone">
+  <input type="hidden" name="entry.1920096684" id="g_prize">
+
+</form>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
 
 </body>
 </html>
