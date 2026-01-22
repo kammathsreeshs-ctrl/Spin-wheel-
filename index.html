@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>The Barber Company - Spin & Win</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
 body{
@@ -41,7 +41,7 @@ h2{
   height:0;
   border-left:22px solid transparent;
   border-right:22px solid transparent;
-  border-bottom:45px solid red;
+  border-bottom:45px solid #d63031;
   z-index:10;
 }
 
@@ -64,9 +64,14 @@ button{
 }
 
 #result{
-  margin-top:20px;
-  font-size:22px;
+  margin-top:25px;
+  font-size:26px;
   font-weight:600;
+  padding:15px 25px;
+  background:#fff;
+  display:inline-block;
+  border-radius:15px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.2);
 }
 </style>
 </head>
@@ -83,17 +88,23 @@ button{
 
 <button onclick="spin()">SPIN</button>
 
-<div id="result"></div>
+<div id="result">🎉 Try your luck!</div>
+
+<!-- Spin sound -->
+<audio id="spinSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_8e2a1c6a44.mp3"></audio>
+
+<!-- Confetti library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
 const prizes = [
-  "10%",
+  "10% OFF",
   "Better luck next time",
-  "30%",
+  "30% OFF",
   "Better luck next time",
-  "50%",
+  "50% OFF",
   "Better luck next time",
-  "Gift voucher"
+  "Gift Voucher"
 ];
 
 const colors = [
@@ -117,13 +128,13 @@ const slice = 2 * Math.PI / prizes.length;
 let angle = 0;
 let spinning = false;
 
-// Pointer is fixed at TOP (12 o'clock)
+// Pointer fixed at top
 const POINTER_ANGLE = -Math.PI / 2;
 
 function drawWheel(){
   ctx.clearRect(0,0,size,size);
 
-  for(let i = 0; i < prizes.length; i++){
+  for(let i=0;i<prizes.length;i++){
     const start = angle + i * slice;
     const end = start + slice;
 
@@ -136,14 +147,14 @@ function drawWheel(){
 
     ctx.save();
     ctx.translate(
-      center + Math.cos(start + slice / 2) * radius * 0.65,
-      center + Math.sin(start + slice / 2) * radius * 0.65
+      center + Math.cos(start + slice/2) * radius * 0.65,
+      center + Math.sin(start + slice/2) * radius * 0.65
     );
-    ctx.rotate(start + slice / 2);
-    ctx.fillStyle = "#000";
-    ctx.font = "16px Poppins";
-    ctx.textAlign = "center";
-    ctx.fillText(prizes[i], 0, 0);
+    ctx.rotate(start + slice/2);
+    ctx.fillStyle="#000";
+    ctx.font="16px Poppins";
+    ctx.textAlign="center";
+    ctx.fillText(prizes[i],0,0);
     ctx.restore();
   }
 }
@@ -153,7 +164,9 @@ drawWheel();
 function spin(){
   if(spinning) return;
   spinning = true;
-  document.getElementById("result").innerText = "";
+
+  document.getElementById("result").innerText = "🎡 Spinning...";
+  document.getElementById("spinSound").play();
 
   const spinAngle = Math.random() * Math.PI * 6 + Math.PI * 10;
   const duration = 5000;
@@ -173,15 +186,22 @@ function spin(){
     } else {
       spinning = false;
 
-      // 🔥 EXACT PRIZE UNDER POINTER
       const normalized =
         (POINTER_ANGLE - angle + 2 * Math.PI) % (2 * Math.PI);
-
       const index =
         Math.floor(normalized / slice) % prizes.length;
 
+      const prize = prizes[index];
+
       document.getElementById("result").innerText =
-        "🎁 Result: " + prizes[index];
+        "🎁 You won: " + prize;
+
+      // 🎉 Confetti
+      confetti({
+        particleCount: 180,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
     }
   }
 
